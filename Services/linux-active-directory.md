@@ -14,5 +14,9 @@ do
 	echo "$users : $group : $name : $hash"
 done
 ```
+Note: It's likely a metasploit module handles this just ran out of time on the box I was messing with to test it
 
 ## Resources
+https://forums.fedoraforum.org/showthread.php?258958-sssd-cache ***Used as the base cached file bash script (sgallah comment)
+https://i.blackhat.com/eu-18/Wed-Dec-5/eu-18-Wadhwa-Brown-Where-2-Worlds-Collide-Bringing-Mimikatz-et-al-to-UNIX.pdf ***slide 37 for grep string on bash script
+
