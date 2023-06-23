@@ -1,4 +1,4 @@
-## Obtain Hash from Cached file and crack
+## Obtain Hash from SSSD cache file (ldb format) and crack
 1. Discover cached file in /var/lib/sss/db
 2. Extract hash from it
 ```
@@ -15,6 +15,7 @@ do
 done
 ```
 Note: It's likely a metasploit module handles this just ran out of time on the box I was messing with to test it
+Note: Each domain has it's own cache
 
 ## Resources
 https://forums.fedoraforum.org/showthread.php?258958-sssd-cache ***Used as the base cached file bash script (sgallah comment)
